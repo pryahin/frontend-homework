@@ -1,39 +1,6 @@
 'use strict';
 
-function roman(val) {
-    return (/^\d+$/.test(val)) ? toRoman(+val) : fromRoman(val);
-}
-
-function toRoman(val) {
-    let result = '';
-
-    while (val > 0) {
-        for (let key in mapRoman) {
-            if (val >= mapRoman[key]) {
-                result += key;
-                val -= mapRoman[key];
-                break;
-            }
-        }
-    }
-    
-    return result;
-}
-
-function fromRoman(val) {
-    let result = 0;
-
-    val.toUpperCase().split('').reduce((prev, current) => {
-        let curr = mapRoman[current];
-        result += prev < curr ? curr - 2 * prev : curr;
-
-        return curr;
-    }, 0);
-
-    return result;
-}
-
-const mapRoman = {
+const ROMAN_MAP = {
     M: 1000,
     CM: 900,
     D: 500,
@@ -48,3 +15,28 @@ const mapRoman = {
     IV: 4,
     I: 1
 };
+
+function roman(val) {
+    return (/^\d+$/.test(val)) ? toRoman(+val) : fromRoman(val);
+}
+
+function toRoman(val) {
+    let result = '';
+    Object.keys(ROMAN_MAP).forEach(key => {
+        while (val >= ROMAN_MAP[key]) {
+            result += key;
+            val -= ROMAN_MAP[key];
+        }
+    });
+    return result;
+}
+
+function fromRoman(val) {
+    let result = 0;
+    val.toUpperCase().split('').reduce((prev, current) => {
+        let curr = ROMAN_MAP[current];
+        result += prev < curr ? curr - 2 * prev : curr;
+        return curr;
+    }, 0);
+    return result;
+}
